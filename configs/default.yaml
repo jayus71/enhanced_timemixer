@@ -1,0 +1,59 @@
+# TimeMixer 默认配置文件
+
+# 数据配置
+data:
+  data_path: './data/AIIA_hour/dataA_fill.csv'  # 数据集路径
+  batch_size: 64                                 # 批大小
+  seq_len: 96                                    # 输入序列长度
+  pred_len: 24                                   # 预测长度
+  train_ratio: 0.7                               # 训练集比例
+  valid_ratio: 0.1                               # 验证集比例
+  scale: true                                    # 是否标准化数据
+  num_workers: 4                                 # 数据加载的工作进程数
+  target_col: 'Value'                          # 目标列名称
+  time_col: 'Time'                              # 时间列名称
+  time_feat: true                                # 是否使用时间特征
+  use_multi_scale: true                          # 是否使用多尺度特征
+  scale_factors: [1, 2, 4]                       # 多尺度特征的缩放因子
+
+# 模型配置
+model:
+  model_name: 'TimeMixer'                        # 模型名称
+  input_dim: 1                                   # 输入特征维度
+  output_dim: 1                                  # 输出特征维度
+  hidden_dim: 512                                # 隐藏层维度
+  num_layers: 3                                  # 层数
+  dropout: 0.1                                   # Dropout比例
+  predictor_types:                               # 预测器类型列表
+    - 'cnn'
+    - 'lstm'
+    - 'transformer'
+
+# 训练配置
+training:
+  epochs: 100                                    # 训练轮数
+  learning_rate: 0.001                           # 学习率
+  weight_decay: 1e-4                             # 权重衰减
+  patience: 20                                   # 早停的耐心值
+  loss_type: 'mse'                               # 损失函数类型：'mse', 'mae', 'mse_with_reg'
+  optimizer: 'adam'                              # 优化器类型：'adam', 'adamw', 'sgd'
+  scheduler: 'reduce_lr_on_plateau'              # 学习率调度器：'reduce_lr_on_plateau', 'cosine_annealing'
+  clip_gradient: 1.0                             # 梯度裁剪的最大范数
+  device: 'cuda'                                 # 训练设备：'cuda', 'cpu'
+
+# 评估配置
+evaluation:
+  metrics:                                       # 要计算的评估指标
+    - 'mae'
+    - 'mse'
+    - 'rmse'
+    - 'mape'
+    - 'smape'
+  test_batch_size: 64                            # 测试批大小
+
+# 保存和可视化配置
+saving:
+  checkpoint_dir: './checkpoints'                # 模型检查点保存目录
+  save_interval: 10                              # 保存模型的间隔轮数
+  log_interval: 5                                # 日志打印的间隔轮数
+  visualization_dir: './visualizations'          # 可视化结果保存目录
